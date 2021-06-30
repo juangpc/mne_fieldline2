@@ -48,15 +48,15 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
         # Setup environment
         python3.8 -m venv venv
         . venv/bin/activate
-        pip install -r requirements-api.txt
-        pip install fieldline_api-0.0.13-py3-none-any.whl
+        pip install -r fieldline_api/requirements-api.txt
+        pip install fieldline_api/fieldline_api-0.0.13-py3-none-any.whl
 
         # ft buffer
         ./buffer/linux/buffer &> /dev/null &
         BUFFER_PID=$!
 
         # Fieldline
-        python3 mne_fieldline.py
+        python3 fieldline_api/mne_fieldline.py
 
         kill -9 ${BUFFER_PID}
     fi
