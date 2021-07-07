@@ -4,6 +4,7 @@ working_chassis = [0, 1]
 broken_sensors = [(2, 6, 16),()]
 working_sensors = [(1, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15),
                    (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)]
+sampling_frequency = 1000
 
 #### FIELDTRIP BUFFER SETTINGS
 ft_IP = 'localhost'
