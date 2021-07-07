@@ -2,37 +2,71 @@ import queue
 import time
 import threading
 import numpy
+import imp
+import os
 
-import mne_fieldline_config as config
+import mne_fieldline_config as configFile
+from fieldline_connector import FieldLineConnector
+from fieldline_api.fieldline_service import FieldLineService
+
 import FieldTrip
 
-
+mneFieldlineConfigFile = ".mne_fieldline_config.py"
 class FieldlineDevice:
     def __init__(self):
-        self.connect()
-        self.init_sensors()
         self.verboseMode = False
         self.dataMultiplier = 1
+        
+        self.defaultSamplingFrequency
+        self.workingChassis
+        self.brokenSensors
+        self.workingSensors
+        self.ipList
+        self.channelKeyList
+
+        self.connector
+        self.service
+
+        self.ftBuffer
+
+        self.__parseConfigFile()
+        self.__connect()
+        self.__init_sensors()
+        self.__configFieldtripBuffer()
 
     def __del__(self):
-        self.stop_measurement()
-        self.disconnect()
+        self.stop()
+        self.exit()
 
-    def connect(self):
+    def __connect(self):
+        self.connector = FieldLineConnector()
+        self.service = FieldLineService(self.connector, prefix = "")
+        time.sleep(.5)
+        self.service.start()
+        self.service.connect(self.ipList)
+        while self.service.get_sensor_state(0,1) is None:
+            time.sleep(.5)
+        print ("Fieldline service connected.")
+        for chassis in self.workingChassis:
+            version = self.service.get_version(chassis)
+            print("Connection with chassis: " + str(chassis) + "... OK")
+            print("Chassis " + str(version))
+        print("---")
+
         lib.init_fieldline_connection()
         lib.init_fieldtrip_connection()
         lib.init_sensors()
 
-    def start_measurement(self):
+    def start(self):
         if lib.are_sensors_ready():
             lib.init_acquisition()
         else:
             print("Sensors are not initialized")
         
-    def stop_measurement(self):
-        lib.stop_measurement()
+    def stop(self):
+        lib.stop()
 
-    def disconnect(self):
+    def exit(self):
         lib.stop_service()
 
     def setVerboseMode(self, v):
@@ -47,4 +81,20 @@ class FieldlineDevice:
     def dataMultplier(self):
         return self.dataMultiplier
 
-            
+    def __parseConfigFile(self):
+
+        currentDirectory = os.getcwd()
+        configFile = os.path.join(currentDirectory, mneFieldlineConfigFile)
+        config = imp.load_source(configFile)
+
+        self.ip_list = config.ip_list
+        self.self.workingChassis = config.self.workingChassis
+        self.brokenSensors = config.broken_sensors
+        self.workingSensors = config.working_sensors
+        self.defaultSamplingFrequency = config.sampling_frequency
+
+        self.ftIP = config.ft_IP
+        self.ftPort = config.ft_port
+
+    def __configFieldtripBuffer(self):
+        pass
