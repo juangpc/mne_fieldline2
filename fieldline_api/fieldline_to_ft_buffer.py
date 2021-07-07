@@ -1,4 +1,6 @@
-import mne_device
+import mne_config_file_parser
+import mne_fieldline_device
+
 
 config_file = "fieldline_to_ft_buffer_config.py"
 
