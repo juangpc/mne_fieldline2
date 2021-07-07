@@ -41,3 +41,7 @@ class Device():
         #     lib.init_acquisition()
         # else:
         #     print("Sensors are not initialized")
+
+    # def __printIfVerbose(self, str):
+    #     if self.verboseMode() is True:
+    #         print(str)        

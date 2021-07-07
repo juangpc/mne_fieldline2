@@ -1,24 +1,41 @@
-import mne_device_lib
+import mne_config_file_parser
+import mne_fieldline_device
+import mne_fieldtrip_buffer
 
-       
-if __name__ == "__main__":
+mne_fieldline_config_file = ".mne_fieldline_config.py"
 
-    opm = mne_device_lib.Device()
+class Device:
+    def __init__(self):
+        self.config = mne_config_file_parser.parse_config_file(mne_fieldline_config_file)
+        self.buffer = mne_fieldtrip_buffer.Buffer(self.config)
 
-    continue_loop = True
+    def __del__(self):
+        self.stop()
+ 
+    def start(self):
+        self.config = mne_config_file_parser.parse_config_file(mne_fieldline_config_file)
 
-    while(continue_loop):
-        print("Commands:")
-        print("\tStart Measurment - start")
-        print("\tStop Measurement - stop")
-        print("\tDisconnect and exit - exit")
-        command = input("Select command: ")
-        if command == "start":
-            print("Starting measurement...")
-            opm.start()
-        elif command == "stop":
-            print("Stopping measurement...")
-            opm.stop()
-        elif command == "exit":
-            print("Exiting program.")
-            continue_loop = False
+        # self.device = mne_fieldline_device.Device(self.config)
+        self.device.start()
+
+    def stop(self):
+        self.device.stop()
+
+    def setVerboseMode(self, v):
+        self.verboseMode = v
+
+    def verboseMode(self):
+        return self.verboseMode
+
+    def setDataMultiplier(self, m):
+        self.dataMultiplier = m
+
+    def dataMultplier(self):
+        return self.dataMultiplier
+
+
+
+# import queue
+# import threading
+# import numpy
+           
