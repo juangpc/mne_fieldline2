@@ -162,18 +162,12 @@ def fine_zero_all_working_sensors():
     wait_for_fine_zero_to_finish()
     print("All sensors fine-zeroed.")
 
-def connect_to_fieldtrip_buffer():
-    ft_client.connect(ft_IP, ft_port)
-    if ft_client.isConnected:
-        print("Fieldtrip Client connected")
-
 def init_ft_header():
     if ft_client.isConnected:
         ft_client.putHeader(num_working_sensors(), default_sample_freq, ft_data_type)
         header = ft_client.getHeader()
         if header.nChannels == num_working_sensors():
             print("Fieldtrip header initialized")
-
 
 def test_data_to_ft():
     arr_data = nunmpy.zeros((200,num_working_sensors()), dtype=numpy.single)
@@ -224,20 +218,6 @@ def data_retreiver_thread():
         data = fConnector.data_q.get()
         parse_data(data)
         fConnector.data_q.task_done()
-
-def init_fieldline_connection():
-    fService.start()
-    print ("Fieldline service started.")
-    time.sleep(.5)
-    fService.connect(ip_list)
-    while fService.get_sensor_state(0,1) is None:
-        time.sleep(1)
-    print ("Fieldline service connected.")
-    for chassis in working_chassis:
-        version = fService.get_version(chassis)
-        print("Connection with chassis: " + str(chassis) + "... OK")
-        print("Chassis " + str(version))
-    print("---")
 
 def init_fieldtrip_connection():
     connect_to_fieldtrip_buffer()

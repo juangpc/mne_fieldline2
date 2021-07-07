@@ -5,10 +5,8 @@ import numpy
 import imp
 import os
 
-import mne_fieldline_config as configFile
 from fieldline_connector import FieldLineConnector
 from fieldline_api.fieldline_service import FieldLineService
-
 import FieldTrip
 
 mneFieldlineConfigFile = ".mne_fieldline_config.py"
@@ -57,7 +55,17 @@ class FieldlineDevice:
         self.__printIfVerbose("---")
 
     def __configFtBuffer(self):
-        self.ftBuffer = FieldTrip.Client()
+        self.ftBuffer.client = FieldTrip.Client()
+        self.ftBuffer.ip = self.config.ft_IP
+        self.ftBuffer.port = self.config.ft_port
+        self.ftBuffer.client.connect(self.ftBuffer.ip, self.ftBuffer.port)
+        if self.ftBuffer.client.isConnected:
+            self.__printIfVerbose("Fieldtrip Client connected")
+        if self.ftBuffer.client.isConnected:
+            self.ftBuffer.client.putHeader(num_working_sensors(), default_sample_freq, ft_data_type)
+        header = self.ftBuffer.client.getHeader()
+        if header.nChannels == num_working_sensors():
+            print("Fieldtrip header initialized")            
 
     # def start(self):
     #     if lib.are_sensors_ready():
