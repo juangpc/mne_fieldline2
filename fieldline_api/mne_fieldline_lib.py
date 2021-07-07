@@ -23,14 +23,9 @@ class FieldlineDevice:
         self.verboseMode = False
         self.dataMultiplier = 1
 
-        self.connector
-        self.service
+        self.config = parseConfigFile(mneFieldlineConfigFile)
 
-        self.ftBuffer
-
-        self.config = self.parseConfigFile(mneFieldlineConfigFile)
-
-        self.__connectToFieldLine()
+        self.__connectToFieldline()
         self.__configFtBuffer()
         # self.__init_sensors()
         # self.__configFieldtripBuffer()
@@ -39,17 +34,17 @@ class FieldlineDevice:
         self.stop()
         self.exit()
 
-    def __connectToFieldLine(self):
-        self.connector = FieldLineConnector()
-        self.service = FieldLineService(self.connector, prefix = "")
+    def __connectToFieldline(self):
+        self.fieldlineConnector = FieldLineConnector()
+        self.fieldlineService = FieldLineService(self.fieldlineConnector, prefix = "")
         time.sleep(.5)
-        self.service.start()
-        self.service.connect(self.ipList)
-        while self.service.get_sensor_state(0,1) is None:
+        self.fieldlineService.start()
+        self.fieldlineService.connect(self.config.ipList)
+        while self.fieldlineService.get_sensor_state(0,1) is None:
             time.sleep(.5)
         self.__printIfVerbose ("Fieldline service connected.")
-        for chassis in self.workingChassis:
-            version = self.service.get_version(chassis)
+        for chassis in self.config.workingChassis:
+            version = self.fieldlineService.get_version(chassis)
             self.__printIfVerbose("Connection with chassis: " + str(chassis) + "... OK")
             self.__printIfVerbose("Chassis " + str(version))
         self.__printIfVerbose("---")
@@ -96,4 +91,7 @@ class FieldlineDevice:
     def __printIfVerbose(self, str):
         if self.verboseMode() is True:
             print(str)
+
+    def __numWorkingSensors():
+
     
