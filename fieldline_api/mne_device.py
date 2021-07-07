@@ -1,8 +1,8 @@
-import mne_fieldline_lib as fl
+import mne_device_lib as fl
 
        
 if __name__ == "__main__":
-    opm = fl.FieldlineDevice()
+    opm = fl.Device()
     
     continue_loop = True
     
