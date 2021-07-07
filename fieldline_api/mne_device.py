@@ -1,11 +1,12 @@
-import mne_device_lib as fl
+import mne_device_lib
 
        
 if __name__ == "__main__":
-    opm = fl.Device()
-    
+
+    opm = mne_device_lib.Device()
+
     continue_loop = True
-    
+
     while(continue_loop):
         print("Commands:")
         print("\tStart Measurment - start")
@@ -14,10 +15,10 @@ if __name__ == "__main__":
         command = input("Select command: ")
         if command == "start":
             print("Starting measurement...")
-            opm.start_measurement()
+            opm.start()
         elif command == "stop":
             print("Stopping measurement...")
-            opm.stop_measurement()
+            opm.stop()
         elif command == "exit":
             print("Exiting program.")
             continue_loop = False
