@@ -40,3 +40,11 @@ class FieldlineDevice:
 
     def verboseMode(self):
         return self.verboseMode
+
+    def setDataMultiplier(self, m):
+        self.dataMultiplier = m
+
+    def dataMultplier(self):
+        return self.dataMultiplier
+
+            
