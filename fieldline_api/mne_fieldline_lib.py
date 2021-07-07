@@ -65,9 +65,9 @@ class FieldlineDevice:
         dataType = FieldTrip.DATATYPE_FLOAT32
         if self.ftBuffer.client.isConnected:
             self.ftBuffer.client.putHeader(num_working_sensors(), default_sample_freq, dataType)
-        header = self.ftBuffer.client.getHeader()
-        if header.nChannels == num_working_sensors():
-            print("Fieldtrip header initialized")            
+        self.ftBuffer.header = self.ftBuffer.client.getHeader()
+        if self.ftBuffer.header.nChannels == num_working_sensors():
+            self.__printIfVerbose("Fieldtrip header initialized")            
 
     # def start(self):
     #     if lib.are_sensors_ready():

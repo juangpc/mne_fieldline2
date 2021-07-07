@@ -19,7 +19,6 @@ else:
 
 ft_IP = config.ft_IP
 ft_port = config.ft_port
-ft_data_type = FieldTrip.DATATYPE_FLOAT32
 
 data_stream_multiplier = 1
 
