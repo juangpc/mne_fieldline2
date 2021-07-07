@@ -30,15 +30,17 @@ class FieldlineDevice:
         self.ftBuffer
 
         self.__parseConfigFile()
-        self.__connect()
-        self.__init_sensors()
-        self.__configFieldtripBuffer()
+
+        self.__connectToFieldLine()
+        self.__connectToFtBuffer()
+        # self.__init_sensors()
+        # self.__configFieldtripBuffer()
 
     def __del__(self):
         self.stop()
         self.exit()
 
-    def __connect(self):
+    def __connectToFieldLine(self):
         self.connector = FieldLineConnector()
         self.service = FieldLineService(self.connector, prefix = "")
         time.sleep(.5)
@@ -46,28 +48,27 @@ class FieldlineDevice:
         self.service.connect(self.ipList)
         while self.service.get_sensor_state(0,1) is None:
             time.sleep(.5)
-        print ("Fieldline service connected.")
+        self.__printIfVerbose ("Fieldline service connected.")
         for chassis in self.workingChassis:
             version = self.service.get_version(chassis)
-            print("Connection with chassis: " + str(chassis) + "... OK")
-            print("Chassis " + str(version))
-        print("---")
+            self.__printIfVerbose("Connection with chassis: " + str(chassis) + "... OK")
+            self.__printIfVerbose("Chassis " + str(version))
+        self.__printIfVerbose("---")
 
-        lib.init_fieldline_connection()
-        lib.init_fieldtrip_connection()
-        lib.init_sensors()
+    def __connectToFtBuffer(self):
+        pass        
 
-    def start(self):
-        if lib.are_sensors_ready():
-            lib.init_acquisition()
-        else:
-            print("Sensors are not initialized")
+    # def start(self):
+    #     if lib.are_sensors_ready():
+    #         lib.init_acquisition()
+    #     else:
+    #         print("Sensors are not initialized")
         
-    def stop(self):
-        lib.stop()
+    # def stop(self):
+    #     lib.stop()
 
-    def exit(self):
-        lib.stop_service()
+    # def exit(self):
+    #     lib.stop_service()
 
     def setVerboseMode(self, v):
         self.verboseMode = v
@@ -98,3 +99,8 @@ class FieldlineDevice:
 
     def __configFieldtripBuffer(self):
         pass
+
+    def __printIfVerbose(self, str):
+        if self.verboseMode() is True:
+            print(str)
+    

@@ -1,40 +1,22 @@
-# mne_fieldline_connector
-# gabrielbmotta, juangpc
 
-import mne_fieldline_config as config
 import mne_fieldline_phantom as spooky
-import mne_fieldline_tools as tools
 
-import queue
-import time
-import threading
-import numpy
-
-import FieldTrip
 
 measure_flag = True
 measure_flag_lock = threading.Lock()
 process_data_flag = False
 process_data_flag_lock = threading.Lock()
 
-default_sample_freq = 1000
-working_chassis = config.working_chassis
-broken_sensors = config.broken_sensors
-working_sensors = config.working_sensors
+
 channel_key_list = []
 
-ip_list = config.ip_list
+
 
 if(config.use_phantom):
     fConnector = spooky.PhantomConnector()
     fService = spooky.PhantomService(fConnector, prefix="")
 else:
-    from fieldline_connector import FieldLineConnector
-    from fieldline_api.fieldline_service import FieldLineService
-    from fieldline_api.fieldline_datatype import FieldLineWaveType
 
-    fConnector = FieldLineConnector()
-    fService = FieldLineService(fConnector, prefix="")
 
 ft_client = FieldTrip.Client()
 ft_IP = config.ft_IP
