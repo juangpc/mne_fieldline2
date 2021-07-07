@@ -1,10 +1,10 @@
 import imp
 import os
 
-def parseConfigFile(file):
+def parse_config_file(file):
     
-    currentDirectory = os.getcwd()
-    configFile = os.path.join(currentDirectory, file)
-    config = imp.load_source(configFile)
+    current_directory = os.getcwd()
+    config_file = os.path.join(current_directory, file)
+    config = imp.load_source(config_file)
     
     return config

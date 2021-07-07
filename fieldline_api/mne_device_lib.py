@@ -1,13 +1,12 @@
 import mne_config_file_parser as parser
-import mne_fieldline_device as fl
+import mne_fieldline_device as fieldline_device
 
 import queue
 import time
 import threading
 import numpy
 
-from fieldline_connector import FieldLineConnector
-from fieldline_api.fieldline_service import FieldLineService
+
 import FieldTrip
 
 mneFieldlineConfigFile = ".mne_fieldline_config.py"
@@ -18,7 +17,7 @@ class Device:
 
         self.config = parser.parseConfigFile(mneFieldlineConfigFile)
 
-        self.__connectToFieldline()
+        self.opm = fieldline_device __connectToFieldline()
         self.__configFtBuffer()
         # self.__init_sensors()
         # self.__configFieldtripBuffer()
