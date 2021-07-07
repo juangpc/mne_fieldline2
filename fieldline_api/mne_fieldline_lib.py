@@ -12,27 +12,28 @@ from fieldline_api.fieldline_service import FieldLineService
 import FieldTrip
 
 mneFieldlineConfigFile = ".mne_fieldline_config.py"
+
+def parseConfigFile(file):
+    
+    currentDirectory = os.getcwd()
+    configFile = os.path.join(currentDirectory, file)
+    config = imp.load_source(configFile)
+    
+    return config
 class FieldlineDevice:
     def __init__(self):
         self.verboseMode = False
         self.dataMultiplier = 1
-        
-        self.defaultSamplingFrequency
-        self.workingChassis
-        self.brokenSensors
-        self.workingSensors
-        self.ipList
-        self.channelKeyList
 
         self.connector
         self.service
 
         self.ftBuffer
 
-        self.__parseConfigFile()
+        self.config = self.parseConfigFile(mneFieldlineConfigFile)
 
         self.__connectToFieldLine()
-        self.__connectToFtBuffer()
+        self.__configFtBuffer()
         # self.__init_sensors()
         # self.__configFieldtripBuffer()
 
@@ -55,8 +56,8 @@ class FieldlineDevice:
             self.__printIfVerbose("Chassis " + str(version))
         self.__printIfVerbose("---")
 
-    def __connectToFtBuffer(self):
-        pass        
+    def __configFtBuffer(self):
+        self.ftBuffer = FieldTrip.Client()
 
     # def start(self):
     #     if lib.are_sensors_ready():
@@ -81,24 +82,6 @@ class FieldlineDevice:
 
     def dataMultplier(self):
         return self.dataMultiplier
-
-    def __parseConfigFile(self):
-
-        currentDirectory = os.getcwd()
-        configFile = os.path.join(currentDirectory, mneFieldlineConfigFile)
-        config = imp.load_source(configFile)
-
-        self.ip_list = config.ip_list
-        self.self.workingChassis = config.self.workingChassis
-        self.brokenSensors = config.broken_sensors
-        self.workingSensors = config.working_sensors
-        self.defaultSamplingFrequency = config.sampling_frequency
-
-        self.ftIP = config.ft_IP
-        self.ftPort = config.ft_port
-
-    def __configFieldtripBuffer(self):
-        pass
 
     def __printIfVerbose(self, str):
         if self.verboseMode() is True:

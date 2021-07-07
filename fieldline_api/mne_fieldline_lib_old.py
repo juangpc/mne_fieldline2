@@ -17,8 +17,6 @@ if(config.use_phantom):
     fService = spooky.PhantomService(fConnector, prefix="")
 else:
 
-
-ft_client = FieldTrip.Client()
 ft_IP = config.ft_IP
 ft_port = config.ft_port
 ft_data_type = FieldTrip.DATATYPE_FLOAT32
