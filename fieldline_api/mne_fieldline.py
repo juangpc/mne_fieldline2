@@ -2,7 +2,7 @@ import mne_fieldline_lib as lib
 
        
 if __name__ == "__main__":
-    opm = FieldlineDevide()
+    opm = FieldlineDevice()
     
     continue_loop = True
     

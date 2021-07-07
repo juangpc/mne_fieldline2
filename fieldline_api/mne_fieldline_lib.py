@@ -11,6 +11,8 @@ class FieldlineDevice:
     def __init__(self):
         self.connect()
         self.init_sensors()
+        self.verboseMode = False
+        self.dataMultiplier = 1
 
     def __del__(self):
         self.stop_measurement()
@@ -25,10 +27,16 @@ class FieldlineDevice:
         if lib.are_sensors_ready():
             lib.init_acquisition()
         else:
-        print("Sensors are not initialized")
+            print("Sensors are not initialized")
         
     def stop_measurement(self):
         lib.stop_measurement()
 
     def disconnect(self):
         lib.stop_service()
+
+    def setVerboseMode(self, v):
+        self.verboseMode = v
+
+    def verboseMode(self):
+        return self.verboseMode
