@@ -1,10 +1,47 @@
-import imp
-import os
+import configparser
+import ast
 
-def parse_config_file(file):
+class MNE_config_file_parser_output:
+    def __str__(self):
+        out_str = ""
+        for section in vars(self).items():
+            out_str += "\n" + section[0] + ":" + str(section[1]) + "\n"
+        return out_str
+class MNE_config_file_parser_section:
+    def __str__(self):
+        out_str = ""
+        for opt in vars(self).items():
+            out_str += "\n\t" + opt[0] + " = " + str(opt[1])
+        return out_str
+class Parser:
+    def __init__(self, config_file = None):
+        self.parser = configparser.ConfigParser()
+        if config_file is not None:
+            self.config_file = config_file
+
+    def set_file(self, config_file):
+        self.config_file = config_file
+
+    def read(self, config_file = None):
+        if config_file is not None:
+            self.config_file = config_file
+            self.read()
+        elif self.config_file is not None:
+            self.parser.read(self.config_file)
+        return self.__parse_config_file()
     
-    current_directory = os.getcwd()
-    config_file = os.path.join(current_directory, file)
-    config = imp.load_source(config_file)
-    
-    return config
+    def parse(self):
+        return self.read()
+
+    def __parse_config_file(self):
+        self.config = MNE_config_file_parser_output()
+        for section in self.parser.sections():
+            sect = MNE_config_file_parser_section()
+            for option in self.parser.options(section):
+                setattr(sect, option, ast.literal_eval(self.parser[section][option]))
+            setattr(self.config, section, sect)
+            # for option in self.parser.options(section):
+            #     delattr(sect, option)
+        return self.config
+
+       

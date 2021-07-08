@@ -1,12 +1,20 @@
 import mne_config_file_parser
-import mne_fieldline_device
+# import mne_device
 
+config_file = 'fieldline_to_ft_buffer.ini'
 
-config_file = "fieldline_to_ft_buffer_config.py"
+def load_config_file():
+    parser = mne_config_file_parser.Parser(config_file)
+    return parser.read()
+   
+def start():
+    config = load_config_file()
+    print(config)
+    
+def stop():
+    pass
 
 if __name__ == "__main__":
-
-    opm = mne_device.Device()
 
     continue_loop = True
 
@@ -16,12 +24,12 @@ if __name__ == "__main__":
         print("\tStop Measurement - stop")
         print("\tDisconnect and exit - exit")
         command = input("Select command: ")
-        if command == "start":
+        if command == 'start':
             print("Starting measurement...")
-            opm.start()
-        elif command == "stop":
+            start()
+        elif command == 'stop':
             print("Stopping measurement...")
-            opm.stop()
-        elif command == "exit":
+            stop()
+        elif command == 'exit':
             print("Exiting program.")
             continue_loop = False
