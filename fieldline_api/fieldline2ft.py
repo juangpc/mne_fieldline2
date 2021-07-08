@@ -15,11 +15,9 @@ curses.start_color()
 menu_items = ["START", "STOP", "RESTART", "EXIT"]
 item_idx_selected = 0
 
-def greet_screen(text, time_to_sleep):
+def greet_screen(text, vertical_position):
     screen_height, screen_width = stdscr.getmaxyx()
-    stdscr.addstr(screen_height//2, screen_width//2 - len(text)//2, text)
-    stdscr.refresh()
-    time.sleep(time_to_sleep)
+    stdscr.addstr(screen_height//2 - vertical_position, screen_width//2 - len(text)//2, text)
 
 def load_config_file():
     parser = mne_config_file_parser.Parser(config_file)
@@ -50,17 +48,19 @@ def stop():
 def main(stdcr):
     global item_idx_selected
     
-    # greet_screen("Mellow greetings!!", 0.5)
-    # greet_screen("Let's do some kick-ass OPM work today!!", 1)
-    # stdscr.clear()
+    stdscr.clear()
+    greet_screen("Mellow greetings!!", 1)
+    greet_screen("Hi, Let's do some kick-ass OPM work today!!", 0)
+    stdscr.refresh()
+    time.sleep(2)
 
     exit_application = False
-    
-    print_menu()
-
     while not exit_application:
-        key = stdscr.getch()
         stdscr.clear()
+        print_menu()
+
+        key = stdscr.getch()
+
         if key == curses.KEY_UP or key == 450 or key == ord('k'):
             if item_idx_selected > 0:
                 item_idx_selected -= 1
@@ -68,9 +68,9 @@ def main(stdcr):
             if item_idx_selected < len(menu_items) -1:
                 item_idx_selected += 1
         elif key == curses.KEY_ENTER or key in [10, 13]:
-            exit_application = True
+            if menu_items[item_idx_selected] == "EXIT":
+                exit_application = True
         
-        print_menu()
         stdscr.refresh()
 
 curses.wrapper(main)
