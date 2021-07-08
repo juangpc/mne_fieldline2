@@ -2,8 +2,6 @@ import mne_config_file_parser
 import mne_fieldline_device
 import mne_fieldtrip_buffer
 
-mne_fieldline_config_file = ".mne_fieldline_config.py"
-
 class Device:
     def __init__(self):
         self.config = mne_config_file_parser.parse_config_file(mne_fieldline_config_file)
