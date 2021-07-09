@@ -6,14 +6,17 @@ class Gui:
         self.item_idx_selected = 0
         self._menu_items = []
         self._menu_callbacks = []
-        self._exit_menu = False
+        self.continue_parsing_inputs = True
         curses.curs_set(0)
         curses.noecho()
         curses.cbreak()
         curses.start_color()
         curses.use_default_colors()
+        self.input_parser_thread = threading.Thread(target=self.input_parser, daemon=True)
+        self.counter = 0
 
     def __del__(self):
+        self.stop_parsing_inputs()
         self.stdscr.keypad(False)
         curses.nocbreak()
         curses.echo()
@@ -26,11 +29,18 @@ class Gui:
         for idx, callback in enumerate(callbacks_list):
             self._menu_callbacks.append(threading.Thread(target = callbacks_list[idx], daemon = True))
 
-    def loop(self, stdscr):
-        while not self._exit_menu:
-            self.stdscr.clear()
-            self._print()
+    def update(self, data = None):
+        self.stdscr.clear()
+        self.counter += 1
+        self.stdscr.addstr(0, 10, "counter = " + str(self.counter))
+        self._print_menu_items()
+        self.stdscr.refresh()
 
+    def input_parser(self):
+        curses.wrapper(self.__input_parser)
+
+    def __input_parser(self, stdscr):
+        while self.continue_parsing_inputs: 
             key = self.stdscr.getch()
             # self.stdscr.addstr(0, 0, str(key))
             if key in {curses.KEY_UP, 450, ord('k')}:
@@ -41,16 +51,19 @@ class Gui:
                     self.item_idx_selected += 1
             elif key in {curses.KEY_ENTER, 10, 13, 459}:
                 self._menu_callbacks[self.item_idx_selected].start()
-            
-            self.stdscr.refresh()
 
-    def start(self):
-        curses.wrapper(self.loop)
+    def start_parsing_inputs(self):
+        self.continue_parsing_inputs = True
+        self.input_parser_thread.start()
+
+    def stop_parsing_inputs(self):
+        self.continue_parsing_inputs = False
+        self.input_parser_thread.join()
 
     def exit_loop(self):
         self._exit_menu = True
 
-    def _print(self):
+    def _print_menu_items(self):
         curses.init_pair(1, curses.COLOR_WHITE, 242)
         screen_height, screen_width = self.stdscr.getmaxyx()
         for idx, item in enumerate(self._menu_items):
