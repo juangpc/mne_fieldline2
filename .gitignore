@@ -10,8 +10,8 @@ Thumbs.db
 
 
 #python stuff
-# mne_cpp/__pycache__/
-# *.pyc
+mne_cpp/__pycache__/
+*.pyc
 
 #fieldline api stuff
 venv/*
