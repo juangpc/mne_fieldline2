@@ -2,10 +2,14 @@ import curses
 import threading
 
 
+class MenuItem:
+    def __init__(self, text, callback):
+        self.text = text
+        self.callback = callback
+
 class Model:
-    def __init__(self, menu_items = [], callback_list = []):
+    def __init__(self, menu_items = []):
         self.menu_items = menu_items
-        self.callback_list = callback_list
 
 class Gui:
     def __init__(self):
@@ -61,7 +65,7 @@ class Gui:
                 self.__spawn_callback(self.__item_idx_selected)
 
     def __spawn_callback(self, fcn_idx):
-        fcn = self.model.callback_list[fcn_idx]
+        fcn = self.model.menu_items[fcn_idx].callback
         self.__spawned_callback_calls_list.append(threading.Thread(target = fcn, daemon = True))
         self.__spawned_callback_calls_list[len(self.__spawned_callback_calls_list) -1].start()
 
@@ -77,10 +81,10 @@ class Gui:
         curses.init_pair(1, curses.COLOR_WHITE, 242)
         screen_height, screen_width = self.__stdscr.getmaxyx()
         for idx, item in enumerate(self.model.menu_items):
-            x = screen_width//2 - len(item)//2
+            x = screen_width//2 - len(item.text)//2
             y = screen_height//2 - len(self.model.menu_items)//2 + idx
             if idx == self.__item_idx_selected:
-                self.__stdscr.addstr(y, x, item, curses.color_pair(1))
+                self.__stdscr.addstr(y, x, item.text, curses.color_pair(1))
             else:
-                self.__stdscr.addstr(y, x, item)
+                self.__stdscr.addstr(y, x, item.text)
 
