@@ -1,4 +1,4 @@
-import mne_cpp.mne_ini_file_parser
+import mne_cpp.ini_file_parser
 import mne_cpp.gui
 
 config_file = 'fieldline2ft.ini'

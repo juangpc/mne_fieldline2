@@ -1,14 +1,14 @@
 import configparser
 import ast
 
-class MNE_config_file_parser_output:
+class Parser_Output:
     def __str__(self):
         out_str = ""
         for section in vars(self).items():
             out_str += "\n" + section[0] + ":" + str(section[1]) + "\n"
         return out_str
         
-class MNE_config_file_parser_section:
+class Parser_Section:
     def __str__(self):
         out_str = ""
         for opt in vars(self).items():
@@ -36,9 +36,9 @@ class Parser:
         return self.read()
 
     def __parse_config_file(self):
-        self.config = MNE_config_file_parser_output()
+        self.config = Parser_Output()
         for section in self.parser.sections():
-            sect = MNE_config_file_parser_section()
+            sect = Parser_Section()
             for option in self.parser.options(section):
                 setattr(sect, option, ast.literal_eval(self.parser[section][option]))
             setattr(self.config, section, sect)
