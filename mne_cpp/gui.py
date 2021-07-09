@@ -1,4 +1,5 @@
 import curses
+import threading
 
 class Menu:
     def __init__(self, stdscr):
@@ -12,7 +13,8 @@ class Menu:
         self._menu_items = new_items
 
     def set_callbacks(self, callbacks_list):
-        self._menu_callbacks = callbacks_list
+        for idx, callback in enumerate(callbacks_list):
+            self._menu_callbacks.append(threading.Thread(target = callbacks_list[idx], daemon = True))
 
     def loop(self, stdscr):
         while not self._exit_menu:
@@ -28,7 +30,7 @@ class Menu:
                 if self.item_idx_selected < len(self._menu_items) - 1:
                     self.item_idx_selected += 1
             elif key in {curses.KEY_ENTER, 10, 13, 459}:
-                self._menu_callbacks[self.item_idx_selected]()
+                self._menu_callbacks[self.item_idx_selected].start()
             
             self.stdscr.refresh()
 
