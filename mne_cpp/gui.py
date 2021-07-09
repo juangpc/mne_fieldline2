@@ -1,13 +1,23 @@
 import curses
 import threading
-
-class Menu:
-    def __init__(self, stdscr):
+class Gui:
+    def __init__(self):
+        self.stdscr = curses.initscr()
         self.item_idx_selected = 0
         self._menu_items = []
         self._menu_callbacks = []
-        self.stdscr = stdscr
         self._exit_menu = False
+        curses.curs_set(0)
+        curses.noecho()
+        curses.cbreak()
+        curses.start_color()
+        curses.use_default_colors()
+
+    def __del__(self):
+        self.stdscr.keypad(False)
+        curses.nocbreak()
+        curses.echo()
+        curses.endwin()
 
     def set_menu_items(self, new_items):
         self._menu_items = new_items
@@ -34,6 +44,9 @@ class Menu:
             
             self.stdscr.refresh()
 
+    def start(self):
+        curses.wrapper(self.loop)
+
     def exit_loop(self):
         self._exit_menu = True
 
@@ -44,41 +57,7 @@ class Menu:
             x = screen_width//2 - len(item)//2
             y = screen_height//2 - len(self._menu_items)//2 + idx
             if idx == self.item_idx_selected:
-                # self.stdscr.attron()
                 self.stdscr.addstr(y, x, item, curses.color_pair(1))
-                # self.stdscr.attroff(curses.color_pair(1))
             else:
                 self.stdscr.addstr(y, x, item)
-
-class GUI:
-    def __init__(self):
-        self.stdscr = curses.initscr()
-        self.stdscr.keypad(True)
-        self.menu = Menu(self.stdscr)
-        self.exit_application = False
-        curses.curs_set(0)
-        curses.noecho()
-        curses.cbreak()
-        curses.start_color()
-        curses.use_default_colors()
-
-    def __del__(self):
-        pass
-        self.stdscr.keypad(False)
-        curses.nocbreak()
-        curses.echo()
-        curses.endwin()
-
-    def start(self):
-        curses.wrapper(self.menu.loop)
-
-    def set_menu(self, items_list):
-        self.menu.set_menu_items(items_list)
-
-    def exit(self):
-        self.menu.exit_loop()
-
-    def set_callbacks(self, func_list):
-        self.menu.set_callbacks(func_list)
-
 
