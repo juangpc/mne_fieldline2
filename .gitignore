@@ -10,7 +10,7 @@ Thumbs.db
 
 
 #python stuff
-lib/__pycache__/
+lib/__pycache__
 *.pyc
 
 #fieldline api stuff
