@@ -7,14 +7,13 @@ class Parser_Output:
         for section in vars(self).items():
             out_str += "\n" + section[0] + ":" + str(section[1]) + "\n"
         return out_str
-        
+     
 class Parser_Section:
     def __str__(self):
         out_str = ""
         for opt in vars(self).items():
             out_str += "\n\t" + opt[0] + " = " + str(opt[1])
         return out_str
-
 class Parser:
     def __init__(self, config_file = None):
         self.parser = configparser.ConfigParser()
@@ -45,5 +44,3 @@ class Parser:
             # for option in self.parser.options(section):
             #     delattr(sect, option)
         return self.config
-
-       
