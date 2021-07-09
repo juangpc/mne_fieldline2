@@ -1,5 +1,5 @@
-import mne_cpp.application
+import lib.application
 
 config = 'fieldline2ft.ini'
-app = mne_cpp.application.App(config_file = config)
+app = lib.application.App(config_file = config)
 app.start()

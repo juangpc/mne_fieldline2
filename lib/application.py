@@ -1,6 +1,6 @@
 import time
-import mne_cpp.ini_file_parser
-import mne_cpp.gui
+import lib.ini_file_parser
+import lib.gui
 
 class App:
     def __init__(self, config_file = None):
@@ -33,8 +33,8 @@ class App:
                      self.add1_to_third,
                      self.add1_to_fourth,
                      self.exit]
-        self.gui = mne_cpp.gui.Gui()
-        self.gui_model = mne_cpp.gui.Model(menu_items=menus, callback_list=callbacks)
+        self.gui = lib.gui.Gui()
+        self.gui_model = lib.gui.Model(menu_items=menus, callback_list=callbacks)
         
     def add1_to_second(self):
         self.gui_model.menu_items[1] = self.gui_model.menu_items[1] + "bla"
