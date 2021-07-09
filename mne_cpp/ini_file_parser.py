@@ -44,3 +44,8 @@ class Parser:
             # for option in self.parser.options(section):
             #     delattr(sect, option)
         return self.config
+
+
+def parse_file(file):
+    parser = Parser(file)
+    return parser.read()
