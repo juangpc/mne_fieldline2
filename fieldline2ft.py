@@ -1,5 +1,5 @@
-import lib.mne_ini_file_parser
-import lib.fieldline2ft_gui
+import mne_cpp.mne_ini_file_parser
+import mne_cpp.gui
 
 config_file = 'fieldline2ft.ini'
 
@@ -13,7 +13,7 @@ def void():
     pass
 
       
-gui = lib.fieldline2ft_gui.GUI()
+gui = mne_cpp.gui.GUI()
 gui.set_menu(['START', 'STOP', 'RESTART', 'EXIT'])
 gui.set_callbacks([start, stop, void, gui.exit])
 

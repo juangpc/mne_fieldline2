@@ -20,14 +20,14 @@ class Menu:
             self._print()
 
             key = self.stdscr.getch()
-
-            if key == curses.KEY_UP or key == 450 or key == ord('k'):
+            # self.stdscr.addstr(0, 0, str(key))
+            if key in {curses.KEY_UP, 450, ord('k')}:
                 if self.item_idx_selected > 0:
                     self.item_idx_selected -= 1
-            elif key == curses.KEY_DOWN or key == 456 or key == ord('j'):
+            elif key in {curses.KEY_DOWN, 456, ord('j')}:
                 if self.item_idx_selected < len(self._menu_items) - 1:
                     self.item_idx_selected += 1
-            elif key == curses.KEY_ENTER or key in [10, 13]:
+            elif key in {curses.KEY_ENTER, 10, 13, 459}:
                 self._menu_callbacks[self.item_idx_selected]()
             
             self.stdscr.refresh()
@@ -78,20 +78,5 @@ class GUI:
 
     def set_callbacks(self, func_list):
         self.menu.set_callbacks(func_list)
-
-
-
-
-# def greet_screen(text, vertical_position):
-#     global stdscr
-#     screen_height, screen_width = stdscr.getmaxyx()
-#     stdscr.addstr(screen_height//2 - vertical_position, screen_width//2 - len(text)//2, text)
-
-
-#     stdscr.clear()
-#     greet_screen("Mellow greetings!!", 1)
-#     # greet_screen("Hi, Let's do some kick-ass OPM work today!!", 0)
-#     stdscr.refresh()
-#     time.sleep(1)
 
 
