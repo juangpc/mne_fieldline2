@@ -1,4 +1,17 @@
-venv/*
 
+#vscode stuff
 .vscode/
+
+#Mac stuff
+.DS_Store
+
+#Windows stuff
+Thumbs.db
+
+
+#python stuff
+__pycache__/
+
+#fieldline api stuff
+venv/*
 
