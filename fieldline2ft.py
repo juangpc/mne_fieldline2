@@ -1,5 +1,4 @@
 import lib.application
-import lib.mne_fieldline as mne
 
 config = 'fieldline2ft.ini'
 
