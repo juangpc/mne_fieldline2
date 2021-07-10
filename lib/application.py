@@ -24,7 +24,7 @@ class App:
             self.__exit_app_lock.acquire()
             out_state = self.__exit_app
             self.__exit_app_lock.release()
-        if len(argv) == 1 and type(argv[0]) is bool:
+        elif len(argv) == 1 and type(argv[0]) is bool:
             self.__exit_app_lock.acquire()
             self.__exit_app = argv[0]
             self.__exit_app_lock.release()

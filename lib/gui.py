@@ -21,6 +21,7 @@ class Gui:
         curses.use_default_colors()
 
         self.__continue_parsing_user_inputs = True
+        self.__continue_parsing_user_inputs_lock = threading.Lock()
         self.__user_input_parser_thread = threading.Thread(target=self.__parse_user_input, daemon=True)
         self.__start_parsing_user_inputs()
 
@@ -50,6 +51,18 @@ class Gui:
 
     def __parse_user_input(self):
         curses.wrapper(self.__user_input_parser)
+
+    def __continue_parsing_user_inputs(self, *argv):
+        if len(argv) == 0:
+            self.__exit_app_lock.acquire()
+            out_state = self.__continue_parsing_user_inputs
+            self.__exit_app_lock.release()            
+        elif len(argv) == 1 and type(argv[0]) is bool:
+            self.__exit_app_lock.acquire()
+            self.__continue_parsing_user_inputs = argv[0]
+            self.__exit_app_lock.release()
+            out_state = argv[0]
+        return out_state
 
     def __user_input_parser(self, stdscr):
         while self.__continue_parsing_user_inputs: 
