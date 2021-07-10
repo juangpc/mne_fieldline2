@@ -2,6 +2,7 @@ import lib.application
 import lib.mne_fieldline as mne
 
 config = 'fieldline2ft.ini'
+
 app = lib.application.App()
 
 # def exit():
@@ -25,7 +26,6 @@ app = lib.application.App()
 # menu = [menu_item_connect]
 
 # app.gui_model.menu_items = menu + app.gui_model.menu_items
-
 
 app.start()
 
