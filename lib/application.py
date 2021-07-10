@@ -6,7 +6,7 @@ class App:
     def __init__(self):
         self.exit_application = False
         self.time_step = 0.01
-        self.__setup_gui()
+        self.__init_gui()
 
     def __del__(self):
         pass
@@ -23,7 +23,7 @@ class App:
             self.gui.update(self.gui_model)
             time.sleep(self.time_step)
 
-    def __setup_gui(self):
+    def __init_gui(self):
         menu = [lib.gui.MenuItem('Exit', self.exit)]
         self.gui = lib.gui.Gui()
         self.gui_model = lib.gui.Model(menu_items=menu)
