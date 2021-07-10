@@ -1,5 +1,6 @@
 import time
-import lib.ini_file_parser
+
+
 import lib.gui
 
 class App:
@@ -27,3 +28,5 @@ class App:
         menu = [lib.gui.MenuItem('Exit', self.exit)]
         self.gui = lib.gui.Gui()
         self.gui_model = lib.gui.Model(menu_items=menu)
+
+
