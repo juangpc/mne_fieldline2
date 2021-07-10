@@ -32,8 +32,3 @@ class Device:
         return self.dataMultiplier
 
 
-
-# import queue
-# import threading
-# import numpy
-           

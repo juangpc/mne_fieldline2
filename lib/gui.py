@@ -2,7 +2,7 @@ import curses
 import threading
 
 
-class MenuItem:
+class Menu_Item:
     def __init__(self, text, callback):
         self.text = text
         self.callback = callback
