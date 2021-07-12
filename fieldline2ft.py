@@ -2,12 +2,9 @@ import lib.application
 import lib.ini_file_parser as parser
 
 config_file = 'fieldline2ft.ini'
-config = parser.parse_config_file(config_file)
+config = parser.parse_file(config_file)
 
 app = lib.application.App()
-
-
-
 app.start()
 
 

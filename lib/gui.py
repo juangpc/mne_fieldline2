@@ -20,8 +20,8 @@ class Gui:
         curses.start_color()
         curses.use_default_colors()
 
-        self.__continue_parsing_user_inputs = True
-        self.__continue_parsing_user_inputs_lock = threading.Lock()
+        self.__parse_user_input_flag = True
+        self.__parse_user_input_flag_lock = threading.Lock()
         self.__user_input_parser_thread = threading.Thread(target=self.__parse_user_input, daemon=True)
         self.__start_parsing_user_inputs()
 
@@ -52,20 +52,20 @@ class Gui:
     def __parse_user_input(self):
         curses.wrapper(self.__user_input_parser)
 
-    def __continue_parsing_user_inputs(self, *argv):
+    def __continue_parsing_user_input(self, *argv):
         if len(argv) == 0:
-            self.__continue_parsing_user_inputs_lock.acquire()
-            out_state = self.__continue_parsing_user_inputs
-            self.__continue_parsing_user_inputs_lock.release()            
+            self.__parse_user_input_flag_lock.acquire()
+            out_state = self.__parse_user_input_flag
+            self.__parse_user_input_flag_lock.release()            
         elif len(argv) == 1 and type(argv[0]) is bool:
-            self.__continue_parsing_user_inputs_lock.acquire()
-            self.__continue_parsing_user_inputs = argv[0]
-            self.__continue_parsing_user_inputs_lock.release()
+            self.__parse_user_input_flag_lock.acquire()
+            self.__parse_user_input_flag = argv[0]
+            self.__parse_user_input_flag_lock.release()
             out_state = argv[0]
         return out_state
 
     def __user_input_parser(self, stdscr):
-        while self.__continue_parsing_user_inputs(): 
+        while self.__continue_parsing_user_input(): 
             key = self.__stdscr.getch()
             # self.__stdscr.addstr(0, 0, str(key))
             if key in {curses.KEY_UP, 450, ord('k')}:
@@ -83,11 +83,11 @@ class Gui:
         self.__spawned_callback_calls_list[len(self.__spawned_callback_calls_list) -1].start()
 
     def __start_parsing_user_inputs(self):
-        self.__continue_parsing_user_inputs(True)
+        self.__continue_parsing_user_input(True)
         self.__user_input_parser_thread.start()
 
     def __stop_parsing_user_inputs(self):
-        self.__continue_parsing_user_inputs(False)
+        self.__continue_parsing_user_input(False)
         self.__user_input_parser_thread.join()
 
     def __print_menu_items(self):

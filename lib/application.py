@@ -39,6 +39,6 @@ class App:
     def __init_gui(self):
         menu = [lib.gui.MenuItem('Exit', self.exit)]
         self.gui = lib.gui.Gui()
-        self.gui_model = lib.gui.Model(menu_items=menu)
+        self.gui_model = lib.gui.Model(menu_items = menu)
 
 
