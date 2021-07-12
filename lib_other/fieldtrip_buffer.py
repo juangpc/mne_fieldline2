@@ -1,11 +1,3 @@
-import FieldTrip
-import numpy
-
-class FieldTripBuffer:
-    def __init__(self):
-        pass
-
-    
 
 
 ft_client = FieldTrip.Client()
