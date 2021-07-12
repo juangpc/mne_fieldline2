@@ -8,11 +8,12 @@
 #Windows stuff
 Thumbs.db
 
-
 #python stuff
 lib/__pycache__
 *.pyc
 
 #fieldline api stuff
 venv/*
+api-example/*
+
 
