@@ -49,7 +49,7 @@ class FieldLineDevice:
         else:
             return False
 
-    def version(self):
+    def chassis_version(self):
         version_output = []
         for ch in self.working_chassis:
             version_output.append(self.service.get_version(ch))
@@ -187,6 +187,5 @@ class FieldLineDevice:
             for ch_i, channel in enumerate(self.channel_key_list):
                 chunk[sample_i, ch_i] = data[0][channel]["data"] * data[0][channel]["calibration"]
         self.data_callback(chunk)
-    
-    def 
+
 
