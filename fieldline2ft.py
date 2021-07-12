@@ -1,8 +1,8 @@
 import lib.application
-import mne_config_file_parser
+import lib.ini_file_parser as parser
 
 config_file = 'fieldline2ft.ini'
-config = mne_config_file_parser.parse_config_file(config_file)
+config = parser.parse_config_file(config_file)
 
 app = lib.application.App()
 
