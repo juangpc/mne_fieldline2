@@ -12,14 +12,16 @@ if __name__ == '__main__':
     log.info("Creating main app.")
     app = lib.application.App()
 
+
     log.info("Parsing input file.")
     config = lib.ini_file_parser.parse_file('fieldline2ft.ini')
     log.debug(config)
 
+    lib.menus.global_exit(app.exit)
     if lib.fieldline.fieldline_correctly_installed():
-        app.set_gui_menu(lib.menus.Menu1(app))
+        app.set_gui_menu(lib.menus.InitialMenu())
     else:
-        app.set_gui_menu(lib.menus.IncorrectInstallation(app))
+        app.set_gui_menu(lib.menus.IncorrectInstallationMenu())
 
     app.start()
 
