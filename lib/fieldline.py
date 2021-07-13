@@ -187,3 +187,9 @@ class FieldLineDevice:
         self.data_callback(chunk)
 
 
+def fieldline_correctly_installed():
+    try:
+        import fieldline_api.fieldline_service
+        return True
+    except ImportError as e:
+        return False

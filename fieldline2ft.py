@@ -1,66 +1,29 @@
-# from lib.fieldline import FieldLineDevice
+import lib.fieldline
 import lib.log
 import lib.application
 import lib.ini_file_parser
-
+import lib.menus
 import logging
 
-# config = lib.ini_file_parser.parse_file('fieldline2ft.ini')
+log = logging.getLogger('main')
 
-# log = logging.getLogger('main')
+if __name__ == '__main__':
+    log.info("Starting fieldline2ft application.")
+    log.info("Creating main app.")
+    app = lib.application.App()
 
-# app = lib.application.App()
+    log.info("Parsing input file.")
+    config = lib.ini_file_parser.parse_file('fieldline2ft.ini')
+    log.debug(config)
 
-# log.info("Starting fieldline2ft application.")
+    if lib.fieldline.fieldline_correctly_installed():
+        app.set_gui_menu(lib.menus.Menu1(app))
+    else:
+        app.set_gui_menu(lib.menus.IncorrectInstallation(app))
 
-def check_fieldline_installation():
-    try:
-        import fieldline_api.fieldline_service
-        return True
-    except ImportError as e:
-        return False
-
-
-print("Checking import: " + str(check_fieldline_installation()))
-
-
+    app.start()
 
 # opm = FieldLineDevice(config.fieldline)
-
-# class Menu1:
-#     def __init__(self, app):
-#         self.menu_list = [('Install Fieldline api', self.func1),
-#                           ('Change state to Menu2', self.func2),
-#                           ('Exit', app.exit) ]
-    
-#     def __del__(self):
-#         with open('bli14.txt','a') as file_out:
-#             file_out.write('bybye!!!\n')
-
-#     def func1(self):
-#         with open('bli1.txt','w') as file_out:
-#             file_out.write('blablabla')
-#             file_out.write('\n\nfunc1 in Menu1')
-    
-#     def func2(self):
-#         app.set_gui_menu(Menu2(app)) 
-
-# class Menu2:
-#     def __init__(self, app):
-#         self.menu_list = [('func1 - Menu2', self.func1),
-#                           ('Exit', app.exit) ]
-
-#     def func1(self):
-#         with open('bli2.txt','w') as file_out:
-#             file_out.write('blobloblo')
-#             file_out.write('\n\nfunc1 in Menu2')
-
-
-# app.set_gui_menu(Menu1(app))
-
-# app.start()
-
-
 
 # ft_client = FieldTrip.Client()
 # ft_IP = config.ft_IP

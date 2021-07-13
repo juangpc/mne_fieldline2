@@ -10,7 +10,7 @@ class App:
         self.__exit_app = False
         self.__exit_app_lock = threading.Lock()
         self.__init_gui()
-        log.debug('Creating application')
+        log.info('Creating application.')
 
     def __del__(self):
         pass
