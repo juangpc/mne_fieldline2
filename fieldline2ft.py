@@ -1,26 +1,40 @@
 import lib.application
 import lib.ini_file_parser as parser
 
+import time
+
 config_file = 'fieldline2ft.ini'
 config = parser.parse_file(config_file)
 
 app = lib.application.App()
-app.start()
-# app.gui_menu = []
-
-# class Menu1:
-#     def __init__(self, app):
-#         app.gui_model = [('Func1', self.func1), 
-#                          ]
+class Menu1:
+    def __init__(self, app):
+        self.menu_list = [('Func1 - Menu1', self.func1),
+                          ('Change state to Menu2', self.func2),
+                          ('Exit', app.exit) ]
     
-#     def func1(self):
+    def func1(self):
+        with open('bli1.txt','w') as file_out:
+            file_out.write('blablabla')
+            file_out.write('\n\nfunc1 in Menu1')
+    
+    def func2(self):
+        app.set_gui_menu(Menu2(app)) 
+
+class Menu2:
+    def __init__(self, app):
+        self.menu_list = [('func1 - Menu2', self.func1),
+                          ('Exit', app.exit) ]
+
+    def func1(self):
+        with open('bli2.txt','w') as file_out:
+            file_out.write('blobloblo')
+            file_out.write('\n\nfunc1 in Menu2')
 
 
+app.set_gui_menu(Menu1(app))
 
-
-
-
-
+app.start()
 
 
 

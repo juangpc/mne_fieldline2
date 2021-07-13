@@ -39,8 +39,8 @@ class Gui:
         curses.echo()
         curses.endwin()
 
-    def update(self, menu):
-        self.menu = menu
+    def update(self, menu_items_list):
+        self.menu = Menu(menu_items_list)
         self.__update_view()
 
     def exit_loop(self):
