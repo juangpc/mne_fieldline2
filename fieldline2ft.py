@@ -24,7 +24,7 @@ def check_fieldline_installation():
 
 opm = FieldLineDevice(config.fieldline)
 
-class InstallMenu:
+class Menu1:
     def __init__(self, app):
         self.menu_list = [('Install Fieldline api', self.func1),
                           ('Change state to Menu2', self.func2),
