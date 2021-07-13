@@ -1,11 +1,10 @@
 import lib.log
 import lib.application
-import lib.ini_file_parser as parser
+import lib.ini_file_parser
 
 import logging
 
-config_file = 'fieldline2ft.ini'
-config = parser.parse_file(config_file)
+config = lib.ini_file_parser.parse_file('fieldline2ft.ini')
 
 app = lib.application.App()
 
