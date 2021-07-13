@@ -2,14 +2,16 @@ import time
 import threading
 import lib.gui
 import logging
+
+log = logging.getLogger(__name__)
 class App:
     def __init__(self):
         self.time_step = 0.01
         self.__exit_app = False
         self.__exit_app_lock = threading.Lock()
         self.__init_gui()
-        logging.debug('Creating application')
-        
+        log.debug('Creating application')
+
     def __del__(self):
         pass
 

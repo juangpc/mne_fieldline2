@@ -1,3 +1,4 @@
+from lib.fieldline import FieldLineDevice
 import lib.log
 import lib.application
 import lib.ini_file_parser
@@ -6,12 +7,26 @@ import logging
 
 config = lib.ini_file_parser.parse_file('fieldline2ft.ini')
 
+log = logging.getLogger('main')
+
 app = lib.application.App()
 
-logging.info('This is an example')
-class Menu1:
+log.info("Starting fieldline2ft application.")
+
+def check_fieldline_installation():
+    try:
+        from fieldline_api.fieldline_service import FieldlineService
+        return True
+    except ImportError as e:
+        return False
+
+
+
+opm = FieldLineDevice(config.fieldline)
+
+class InstallMenu:
     def __init__(self, app):
-        self.menu_list = [('Func1 - Menu1', self.func1),
+        self.menu_list = [('Install Fieldline api', self.func1),
                           ('Change state to Menu2', self.func2),
                           ('Exit', app.exit) ]
     
