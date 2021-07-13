@@ -1,7 +1,6 @@
 import curses
 import threading
 
-
 class MenuItem:
     def __init__(self, text, function_name):
         self.text = text

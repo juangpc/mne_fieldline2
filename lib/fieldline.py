@@ -1,4 +1,3 @@
-# from lib_other.mne_fieldline_lib import data_retreiver_thread
 from logging import error
 import threading
 from lib.fieldline_connector import FieldLineConnector

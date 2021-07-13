@@ -1,61 +1,64 @@
-from lib.fieldline import FieldLineDevice
+# from lib.fieldline import FieldLineDevice
 import lib.log
 import lib.application
 import lib.ini_file_parser
 
 import logging
 
-config = lib.ini_file_parser.parse_file('fieldline2ft.ini')
+# config = lib.ini_file_parser.parse_file('fieldline2ft.ini')
 
-log = logging.getLogger('main')
+# log = logging.getLogger('main')
 
-app = lib.application.App()
+# app = lib.application.App()
 
-log.info("Starting fieldline2ft application.")
+# log.info("Starting fieldline2ft application.")
 
 def check_fieldline_installation():
     try:
-        from fieldline_api.fieldline_service import FieldlineService
+        import fieldline_api.fieldline_service
         return True
     except ImportError as e:
         return False
 
 
+print(check_fieldline_installation())
 
-opm = FieldLineDevice(config.fieldline)
 
-class Menu1:
-    def __init__(self, app):
-        self.menu_list = [('Install Fieldline api', self.func1),
-                          ('Change state to Menu2', self.func2),
-                          ('Exit', app.exit) ]
+
+# opm = FieldLineDevice(config.fieldline)
+
+# class Menu1:
+#     def __init__(self, app):
+#         self.menu_list = [('Install Fieldline api', self.func1),
+#                           ('Change state to Menu2', self.func2),
+#                           ('Exit', app.exit) ]
     
-    def __del__(self):
-        with open('bli14.txt','a') as file_out:
-            file_out.write('bybye!!!\n')
+#     def __del__(self):
+#         with open('bli14.txt','a') as file_out:
+#             file_out.write('bybye!!!\n')
 
-    def func1(self):
-        with open('bli1.txt','w') as file_out:
-            file_out.write('blablabla')
-            file_out.write('\n\nfunc1 in Menu1')
+#     def func1(self):
+#         with open('bli1.txt','w') as file_out:
+#             file_out.write('blablabla')
+#             file_out.write('\n\nfunc1 in Menu1')
     
-    def func2(self):
-        app.set_gui_menu(Menu2(app)) 
+#     def func2(self):
+#         app.set_gui_menu(Menu2(app)) 
 
-class Menu2:
-    def __init__(self, app):
-        self.menu_list = [('func1 - Menu2', self.func1),
-                          ('Exit', app.exit) ]
+# class Menu2:
+#     def __init__(self, app):
+#         self.menu_list = [('func1 - Menu2', self.func1),
+#                           ('Exit', app.exit) ]
 
-    def func1(self):
-        with open('bli2.txt','w') as file_out:
-            file_out.write('blobloblo')
-            file_out.write('\n\nfunc1 in Menu2')
+#     def func1(self):
+#         with open('bli2.txt','w') as file_out:
+#             file_out.write('blobloblo')
+#             file_out.write('\n\nfunc1 in Menu2')
 
 
-app.set_gui_menu(Menu1(app))
+# app.set_gui_menu(Menu1(app))
 
-app.start()
+# app.start()
 
 
 
