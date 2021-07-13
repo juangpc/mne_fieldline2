@@ -21,7 +21,7 @@ def check_fieldline_installation():
         return False
 
 
-print(check_fieldline_installation())
+print("Checking import: " + str(check_fieldline_installation()))
 
 
 

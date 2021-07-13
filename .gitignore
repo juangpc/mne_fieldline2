@@ -15,7 +15,7 @@ lib/__pycache__
 
 #fieldline api stuff
 venv/*
-api-example/*
+#api-example/*
 
 #avoid pushing logs
 *.log
