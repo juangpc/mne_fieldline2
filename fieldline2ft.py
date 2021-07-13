@@ -1,18 +1,25 @@
+import lib.log
 import lib.application
 import lib.ini_file_parser as parser
 
-import time
+import logging
 
 config_file = 'fieldline2ft.ini'
 config = parser.parse_file(config_file)
 
 app = lib.application.App()
+
+logging.info('This is an example')
 class Menu1:
     def __init__(self, app):
         self.menu_list = [('Func1 - Menu1', self.func1),
                           ('Change state to Menu2', self.func2),
                           ('Exit', app.exit) ]
     
+    def __del__(self):
+        with open('bli14.txt','a') as file_out:
+            file_out.write('bybye!!!\n')
+
     def func1(self):
         with open('bli1.txt','w') as file_out:
             file_out.write('blablabla')

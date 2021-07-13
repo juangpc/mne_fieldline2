@@ -7,7 +7,6 @@ from fieldline_api.fieldline_service import FieldLineService
 import time
 import datetime
 import numpy
-
 class FieldLineDevice:
     def __init__(self, conf):
         self.connector = FieldLineConnector()
