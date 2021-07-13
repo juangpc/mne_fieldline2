@@ -1,4 +1,5 @@
 
+
 #vscode stuff
 .vscode/
 
@@ -16,4 +17,5 @@ lib/__pycache__
 venv/*
 api-example/*
 
-
+#avoid pushing logs
+*.log
