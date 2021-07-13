@@ -19,6 +19,9 @@ class App:
         self.gui.exit_loop()
         self.__exit_application(True)
 
+    def set_gui_menu(self, pair_list):
+        self.gui_menu = lib.gui.Menu(pair_list)
+
     def __exit_application(self, *argv):
         if len(argv) == 0:
             self.__exit_app_lock.acquire()
@@ -33,12 +36,11 @@ class App:
 
     def __loop(self):
         while not self.__exit_application():
-            self.gui.update(self.gui_model)
+            self.gui.update(self.gui_menu)
             time.sleep(self.time_step)
 
     def __init_gui(self):
-        menu = [lib.gui.MenuItem('Exit', self.exit)]
         self.gui = lib.gui.Gui()
-        self.gui_model = lib.gui.Model(menu_items = menu)
+        self.gui_menu = lib.gui.Menu([('Exit', self.exit)])
 
 

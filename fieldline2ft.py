@@ -6,6 +6,14 @@ config = parser.parse_file(config_file)
 
 app = lib.application.App()
 app.start()
+# app.gui_menu = []
+
+# class Menu1:
+#     def __init__(self, app):
+#         app.gui_model = [('Func1', self.func1), 
+#                          ]
+    
+#     def func1(self):
 
 
 

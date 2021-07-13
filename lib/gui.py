@@ -3,13 +3,15 @@ import threading
 
 
 class MenuItem:
-    def __init__(self, text, callback):
+    def __init__(self, text, function_name):
         self.text = text
-        self.callback = callback
+        self.callback = function_name
 
-class Model:
-    def __init__(self, menu_items = []):
-        self.menu_items = menu_items
+class Menu:
+    def __init__(self, menu_items_list = []):
+        self.menu_items = []
+        for name, function_name in menu_items_list:
+            self.menu_items.append(MenuItem(name, function_name))
 
 class Gui:
     def __init__(self):
@@ -26,7 +28,7 @@ class Gui:
         self.__start_parsing_user_inputs()
 
         self.__item_idx_selected = 0
-        self.model = Model()
+        self.menu = Menu()
         
         self.__spawned_callback_calls_list = []
 
@@ -37,8 +39,8 @@ class Gui:
         curses.echo()
         curses.endwin()
 
-    def update(self, model):
-        self.model = model
+    def update(self, menu):
+        self.menu = menu
         self.__update_view()
 
     def exit_loop(self):
@@ -72,13 +74,13 @@ class Gui:
                 if self.__item_idx_selected > 0:
                     self.__item_idx_selected -= 1
             elif key in {curses.KEY_DOWN, 456, ord('j')}:
-                if self.__item_idx_selected < len(self.model.menu_items) - 1:
+                if self.__item_idx_selected < len(self.menu.menu_items) - 1:
                     self.__item_idx_selected += 1
             elif key in {curses.KEY_ENTER, 10, 13, 459}:
                 self.__spawn_callback(self.__item_idx_selected)
 
     def __spawn_callback(self, fcn_idx):
-        fcn = self.model.menu_items[fcn_idx].callback
+        fcn = self.menu.menu_items[fcn_idx].callback
         self.__spawned_callback_calls_list.append(threading.Thread(target = fcn, daemon = True))
         self.__spawned_callback_calls_list[len(self.__spawned_callback_calls_list) -1].start()
 
@@ -93,9 +95,9 @@ class Gui:
     def __print_menu_items(self):
         curses.init_pair(1, curses.COLOR_WHITE, 242)
         screen_height, screen_width = self.__stdscr.getmaxyx()
-        for idx, item in enumerate(self.model.menu_items):
+        for idx, item in enumerate(self.menu.menu_items):
             x = screen_width//2 - len(item.text)//2
-            y = screen_height//2 - len(self.model.menu_items)//2 + idx
+            y = screen_height//2 - len(self.menu.menu_items)//2 + idx
             if idx == self.__item_idx_selected:
                 self.__stdscr.addstr(y, x, item.text, curses.color_pair(1))
             else:
