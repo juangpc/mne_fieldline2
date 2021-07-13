@@ -60,8 +60,6 @@ app.start()
 # menu_item_use_phantom = lib.gui.MenuItem('Use Phantom', mne.phantom_on)
 # menu_item_dont_use_phantom = lib.gui.MenuItem('Use Real Device', mne.phantom_off)
 
-# menu_item_exit = lib.gui.MenuItem('Exit', exit)
-
 # menu = [menu_item_connect]
 
 # app.gui_model.menu_items = menu + app.gui_model.menu_items
