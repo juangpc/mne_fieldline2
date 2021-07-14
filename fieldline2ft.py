@@ -2,50 +2,98 @@ import lib.fieldline
 import lib.log
 import lib.application
 import lib.ini_file_parser
-import lib.menus
-import lib.globals as globals
+import lib.FieldTrip
 
 import logging
+import time
 
 log = logging.getLogger('main')
 
-if __name__ == '__main__':
-    log.info("Starting fieldline2ft application.")
-    log.info("Creating main app.")
-    app = lib.application.App()
+class IncorrectInstallationMenu:
+    def __init__(self):
+        self.menu_list = [('Incorrect FieldLine installation. Please re-install and try again.', app.exit)]
 
-    log.info("Parsing input file.")
-    config = lib.ini_file_parser.parse_file('fieldline2ft.ini')
-    log.debug(config)
+class ConnectToFieldline:
+    def __init__(self):
+        self.menu_list = [('Connect to Fieldline', self.connect_to_fieldline),
+                          ('Exit', app.exit) ]
+    
+    def connect_to_fieldline(self):
+        log.info("connecting to new state: ConnectedState")
+        app.set_gui_menu(ConnectedState())
+    
+class ConnectedState:
+    def __init__(self):
+        self.menu_list = [('Disconnect from FieldLine', self.disconnect_from_fieldline),
+                          ('Tune sensors', self.tune_sensors),
+                          ('Start data acquisition', self.start_acquisition),
+                          ('Exit', app.exit) ]
 
-    globals.set_global_app(app)
-    if lib.fieldline.fieldline_correctly_installed():
-        app.set_gui_menu(lib.menus.ConnectToFieldline())
+    def disconnect_from_fieldline(self):
+        app.set_gui_menu(ConnectToFieldline())
+
+    def tune_sensors(self):
+        app.set_gui_menu(TunningSensorsState())
+
+    def start_acquisition(self):
+        app.set_gui_menu(AcquisitionState())
+
+
+class TunningSensorsState:
+    def __init__(self):
+        self.menu_list = [('Tunning sensors...', void),
+                          ('Go Back', self.go_back),
+                          ('Exit', app.exit)]
+        
+    def go_back(self):
+        app.set_gui_menu(ConnectedState())
+
+class AcquisitionState:
+    def __init__(self):
+        self.menu_list = [('Stop data acquisition', self.stop_acquisition),
+                          ('Exit', app.exit)]
+    def stop_acquisition(self):
+        app.set_gui_menu(ConnectedState())
+
+def void():
+    pass
+
+## ###############################################################################
+
+log.info("Starting fieldline2ft application.")
+log.info("Creating main app.")
+app = lib.application.App()
+
+log.info("Parsing input file.")
+config = lib.ini_file_parser.parse_file('fieldline2ft.ini')
+log.debug(config)
+
+if lib.fieldline.fieldline_correctly_installed():
+    app.set_gui_menu(ConnectToFieldline())
+else:
+    app.set_gui_menu(IncorrectInstallationMenu(app))
+
+fieldline = lib.fieldline.FieldLineDevice(config.fieldline)
+
+ft_buffer_client = lib.FieldTrip.Client()
+
+def connect_to_fieldtrip_buffer():
+    log.info("Attempting to connect to Fieldtrip Buffer")
+    ft_buffer_client.connect(config.fieldtrip.ft_IP, config.fieldtrip.ft_port)
+    if ft_buffer_client.isConnected():
+        log.info("Connection with FT Buffer successful.")
     else:
-        app.set_gui_menu(lib.menus.IncorrectInstallationMenu(app))
-
-    app.start()
-
-# opm = FieldLineDevice(config.fieldline)
-
-# ft_client = FieldTrip.Client()
-# ft_IP = config.ft_IP
-# ft_port = config.ft_port
-# ft_data_type = FieldTrip.DATATYPE_FLOAT32
-
-# data_stream_multiplier = 1
-
-# def connect_to_fieldtrip_buffer():
-#     ft_client.connect(ft_IP, ft_port)
-#     if ft_client.isConnected:
-#         print("Fieldtrip Client connected")
-
-# def init_ft_header():
-#     if ft_client.isConnected:
-#         ft_client.putHeader(num_working_sensors(), default_sample_freq, ft_data_type)
-#         header = ft_client.getHeader()
-#         if header.nChannels == num_working_sensors():
-#             print("Fieldtrip header initialized")
+        log.info("Connection with FT Buffer failed.")
+        log.debug(ft_buffer_client)
+     
+def init_ft_header():
+    if ft_buffer_client.isConnected:
+        ft_buffer_client.putHeader(fieldline.num_working_sensors(), config.dieldtrip.sampling_frequency, lib.FieldTrip.DATATYPE_FLOAT32)
+        header = ft_buffer_client.getHeader()
+        if header.nChannels == fieldline.num_working_sensors():
+            log.info("Fieldtrip header initialized")
+        else:
+            log.info("Fieldtrip header NOT initialized")
 
 # def test_data_to_ft():
 #     arr_data = nunmpy.zeros((200,num_working_sensors()), dtype=numpy.single)
@@ -60,22 +108,4 @@ if __name__ == '__main__':
 #     mne.disconnect
 #     app.exit
 
-# menu_item_connect = lib.gui.MenuItem('Connect to Fieldline', mne.connect)
-# menu_item_disconnect = lib.gui.MenuItem('Disconnect from Fieldline', mne.disconnect)
-
-# menu_item_start = lib.gui.MenuItem('Start to Fieldline', mne.start_measurement)
-# menu_item_stop = lib.gui.MenuItem('Connect to Fieldline', mne.stop_measurement)
-
-# menu_item_tune_sensors = lib.gui.MenuItem('Tune Fieldline sensors', mne.tune_sensors)
-# menu_item_stop_tuning_sensors = lib.gui.MenuItem('Stop tuning sensors', mne.stop_tune_sensors)
-
-# menu_item_use_phantom = lib.gui.MenuItem('Use Phantom', mne.phantom_on)
-# menu_item_dont_use_phantom = lib.gui.MenuItem('Use Real Device', mne.phantom_off)
-
-# menu = [menu_item_connect]
-
-# app.gui_model.menu_items = menu + app.gui_model.menu_items
-
-
-# # app.gui_model.menu_items[]
-# # app.gui_model.callback_list[]
+app.start()
