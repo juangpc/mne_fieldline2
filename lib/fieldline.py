@@ -16,7 +16,7 @@ class FieldLineDevice:
         self.__measuring_data = False
         self.__measuring_data_lock = threading.Lock()
 
-        self.data_callback_lock = threading.Lock()
+        self.__data_callback_lock = threading.Lock()
         self.__data_callback = print
 
     def __del__(self):
@@ -123,9 +123,9 @@ class FieldLineDevice:
         return self.measuring_data()
 
     def set_data_callback(self, callback):
-        self.data_callback_lock.acquire()
+        self.__data_callback_lock.acquire()
         self.__data_callback = callback
-        self.data_callback_lock.release()
+        self.__data_callback_lock.release()
 
     def __wait_for_restart_to_finish(self):
         while (self.num_restarted_sensors() < self.num_working_sensors()):
@@ -187,22 +187,22 @@ class FieldLineDevice:
         self.__data_callback(chunk)
 
 
-class FieldLinePhantomDevice:
+class FieldLineDevice:
     def __init__(self, conf):
-        # self.connector = FieldLineConnector()
-        # self.service = FieldLineService(self.connector, prefix = "")
+        self.__connector = FieldLineConnector()
+        self.__service = FieldLineService(self.__connector, prefix = "")
         self.__time_sleep_minor_secs = .4
         self.__time_out_secs = 20
         self.__init_configuration(conf)
         self.__measuring_data = False
-        self.measuring_data_lock = threading.Lock()
+        self.__measuring_data_lock = threading.Lock()
 
-        self.data_callback_lock = threading.Lock()
+        self.__data_callback_lock = threading.Lock()
         self.__data_callback = print
 
     def __del__(self):
         self.stop()
-        self.service.stop()
+        self.__service.stop()
 
     def __init_configuration(self, conf = None):
         self.ip_list = conf.ip_list
@@ -216,11 +216,11 @@ class FieldLinePhantomDevice:
         waiting_time_seconds = (datetime.datetime.now() - time_start).total_seconds
         ch = self.working_chassis[0]
         sens = self.working_sensors[ch][0]
-        service_output = self.service.get_sensor_state(ch, sens)
+        service_output = self.__service.get_sensor_state(ch, sens)
 
         while service_output is None and waiting_time_seconds < self.__time_out_secs:
             time.sleep(self.__time_sleep_minor_secs)
-            service_output = self.service.get_sensor_state(ch, sens)
+            service_output = self.__service.get_sensor_state(ch, sens)
             waiting_time_seconds = (datetime.datetime.now() - time_start).total_seconds
 
         if service_output is not None:
@@ -231,12 +231,12 @@ class FieldLinePhantomDevice:
     def chassis_version(self):
         version_output = []
         for ch in self.working_chassis:
-            version_output.append(self.service.get_version(ch))
+            version_output.append(self.__service.get_version(ch))
         return version_output
 
     def connect(self):
-        if not self.service.is_service_running():
-            self.service.start()
+        if not self.__service.is_service_running():
+            self.__service.start()
             time.sleep(self.__time_sleep_minor_secs)
             if self.is_connected():
                 return True
@@ -259,22 +259,22 @@ class FieldLinePhantomDevice:
 
     def num_fine_zeroed_sensoros(self):
         num_sensors = 0
-        if self.connector.fine_zero_sensors:
-            for sensors_in_chassis in self.connector.fine_zero_sensors.values():
+        if self.__connector.fine_zero_sensors:
+            for sensors_in_chassis in self.__connector.fine_zero_sensors.values():
                 num_sensors += len(sensors_in_chassis)
         return num_sensors
 
     def num_coarse_zeroed_sensors(self):
         num_sensors = 0
-        if self.connector.coarse_zero_sensors:
-            for sensors_in_chassis in self.connector.coarse_zero_sensors.values():
+        if self.__connector.coarse_zero_sensors:
+            for sensors_in_chassis in self.__connector.coarse_zero_sensors.values():
                 num_sensors += len(sensors_in_chassis)
         return num_sensors
 
     def num_restarted_sensors(self):
         num_sensors = 0
-        if self.connector.restarted_sensors:
-            for sensors_in_chassis in self.connector.restarted_sensors.values():
+        if self.__connector.restarted_sensors:
+            for sensors_in_chassis in self.__connector.restarted_sensors.values():
                 num_sensors += len(sensors_in_chassis)
         return num_sensors
 
@@ -294,19 +294,19 @@ class FieldLinePhantomDevice:
 
     def measuring_data(self, *argv):
         if len(argv) == 0:
-            self.measuring_data_lock.acquire()
+            self.__measuring_data_lock.acquire()
             out_value = self.__measuring_data
-            self.measuring_data_lock.release()
+            self.__measuring_data_lock.release()
         else:
-            self.measuring_data_lock.acquire()
+            self.__measuring_data_lock.acquire()
             self.__measuring_data = argv[0]
-            self.measuring_data_lock.release()
+            self.__measuring_data_lock.release()
         return self.measuring_data()
 
     def set_data_callback(self, callback):
-        self.data_callback_lock.acquire()
+        self.__data_callback_lock.acquire()
         self.__data_callback = callback
-        self.data_callback_lock.release()
+        self.__data_callback_lock.release()
 
     def __wait_for_restart_to_finish(self):
         while (self.num_restarted_sensors() < self.num_working_sensors()):
@@ -348,9 +348,9 @@ class FieldLinePhantomDevice:
 
     def __data_retreiver_thread(self):
         while self.measuring_data():
-            data = self.connector.data_q.get()
+            data = self.__connector.data_q.get()
             self.__parse_data(data)
-            self.connector.data_q.task_done()
+            self.__connector.data_q.task_done()
 
     def __create_channel_key_list(self):
         channel_key_list = []
@@ -366,7 +366,6 @@ class FieldLinePhantomDevice:
             for ch_i, channel in enumerate(self.channel_key_list):
                 chunk[sample_i, ch_i] = data[0][channel]["data"] * data[0][channel]["calibration"]
         self.__data_callback(chunk)
-
 
 
 def fieldline_correctly_installed():
