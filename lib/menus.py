@@ -21,7 +21,7 @@ class ConnectedState:
     def __init__(self):
         self.menu_list = [('Disconnect from FieldLine', self.disconnect_from_fieldline),
                           ('Tune sensors', self.tune_sensors),
-                          ('Start data acquisition', self.start_acquisition)
+                          ('Start data acquisition', self.start_acquisition),
                           ('Exit', globals.exit) ]
 
     def disconnect_from_fieldline(self):
