@@ -77,6 +77,7 @@ class Gui:
                     self.__item_idx_selected += 1
             elif key in {curses.KEY_ENTER, 10, 13, 459}:
                 self.__spawn_callback(self.__item_idx_selected)
+                
 
     def __spawn_callback(self, fcn_idx):
         fcn = self.menu.menu_items[fcn_idx].callback

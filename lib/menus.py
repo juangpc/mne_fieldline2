@@ -1,42 +1,49 @@
 import lib.globals as globals
 import logging
+import time
 
-log = logging.getLogger('menus')
+log = logging.getLogger(__name__)
 
 class IncorrectInstallationMenu:
     def __init__(self):
-        self.menu_list = [('Incorrect FieldLine installation. Please re-install and try again.', globals.app.exit)]
+        self.menu_list = [('Incorrect FieldLine installation. Please re-install and try again.', globals.exit)]
 
-class InitialMenu:
+class ConnectToFieldline:
     def __init__(self):
-        self.menu_list = [('Install Fieldline api', self.func1),
-                          ('Change state to Menu2', self.func2),
-                          ('Exit', globals.app.exit) ]
+        self.menu_list = [('Connect to Fieldline', self.connect_to_fieldline),
+                          ('Exit', globals.exit) ]
     
-    def __del__(self):
-        with open('bli14.txt','w') as file_out:
-            file_out.write('bybye!!!\n')
-
-    def func1(self):
-        with open('bli1.txt','w') as file_out:
-            file_out.write('blablabla')
-            file_out.write('\n\nfunc1 in Menu1')
+    def connect_to_fieldline(self):
+        log.info("connecting to new state: ConnectedState")
+        globals.app.set_gui_menu(ConnectedState())
     
-    def func2(self):
-        log.debug("Switching to Menu2")
-        globals.app.set_gui_menu(Menu2())
-
-class Menu2:
+class ConnectedState:
     def __init__(self):
-        self.menu_list = [('func1 - Menu2', self.func1),
-                          ('Switch to menu 1', self.func2),
-                          ('Exit', globals.app.exit) ]
+        self.menu_list = [('Disconnect from FieldLine', self.disconnect_from_fieldline),
+                          ('Tune sensors', self.tune_sensors),
+                          ('Start data acquisition', self.start_acquisition)
+                          ('Exit', globals.exit) ]
 
-    def func1(self):
-        with open('bli2.txt','w') as file_out:
-            file_out.write('blobloblo')
-            file_out.write('\n\nfunc1 in Menu2')
-    def func2(self):
-        log.debug("Switch back to menu 1")
-        globals.app.switch_to_menu(InitialMenu())
+    def disconnect_from_fieldline(self):
+        globals.switch_to_menu(ConnectToFieldline())
+
+    def tune_sensors(self):
+        globals.switch_to_menu(TunningSensorsState())
+
+    def start_acquisition(self):
+        globals.switch_to_menu(AcquisitionState())
+
+class TunningSensorsState:
+    def __init__(self):
+        self.menu_list = [('Exit', globals.exit)]
+        time.sleep(4)
+        globals.switch_to_menu(ConnectedState)
+
+class AcquisitionState:
+    def __init__(self):
+        self.menu_list = [('Stop data acquisition', self.stop_acquisition),
+                          ('Exit', globals.exit)]
+    def stop_acquisition(self):
+        globals.switch_to_menu(ConnectedState())
+
 

@@ -22,6 +22,7 @@ class App:
         self.gui_menu([('Exit', self.exit)])
 
     def set_gui_menu(self, menu):
+        log.info("About to set new gui menu")
         self.gui_menu(menu.menu_list)
 
     def start(self):
