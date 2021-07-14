@@ -25,7 +25,7 @@ class Gui:
         self.__parse_user_input_flag_lock = threading.Lock()
         self.__user_input_parser_thread = threading.Thread(target=self.__parse_user_input, daemon=True)
         self.__start_parsing_user_inputs()
-
+      
         self.__item_idx_selected = 0
         self.menu = Menu()
         
@@ -40,6 +40,7 @@ class Gui:
 
     def update(self, menu_items_list):
         self.menu = Menu(menu_items_list)
+        self.__reset_item_idx_selected()
         self.__update_view()
 
     def exit_loop(self):
@@ -72,12 +73,13 @@ class Gui:
             if key in {curses.KEY_UP, 450, ord('k')}:
                 if self.__item_idx_selected > 0:
                     self.__item_idx_selected -= 1
+                    self.__update_view()
             elif key in {curses.KEY_DOWN, 456, ord('j')}:
                 if self.__item_idx_selected < len(self.menu.menu_items) - 1:
                     self.__item_idx_selected += 1
+                    self.__update_view()
             elif key in {curses.KEY_ENTER, 10, 13, 459}:
                 self.__spawn_callback(self.__item_idx_selected)
-                
 
     def __spawn_callback(self, fcn_idx):
         fcn = self.menu.menu_items[fcn_idx].callback
@@ -92,6 +94,9 @@ class Gui:
         self.__continue_parsing_user_input(False)
         self.__user_input_parser_thread.join()
 
+    def __reset_item_idx_selected(self):
+        self.__item_idx_selected = 0
+
     def __print_menu_items(self):
         curses.init_pair(1, curses.COLOR_WHITE, 242)
         screen_height, screen_width = self.__stdscr.getmaxyx()
@@ -102,4 +107,3 @@ class Gui:
                 self.__stdscr.addstr(y, x, item.text, curses.color_pair(1))
             else:
                 self.__stdscr.addstr(y, x, item.text)
-

@@ -10,6 +10,7 @@ class App:
         self.__exit_app = False
         self.__exit_app_lock = threading.Lock()
         self.__init_gui()
+        self.__update_gui = False
         log.info('Creating application.')
 
     def __del__(self):
@@ -20,10 +21,12 @@ class App:
         self.__gui_menu = None
         self.__gui_menu_lock = threading.Lock()
         self.gui_menu([('Exit', self.exit)])
+        self.__update_gui = True
 
     def set_gui_menu(self, menu):
         log.info("About to set new gui menu")
         self.gui_menu(menu.menu_list)
+        self.__update_gui = True
 
     def start(self):
         self.__loop_thread = threading.Thread(target = self.__loop)
@@ -59,7 +62,9 @@ class App:
 
     def __loop(self):
         while not self.__exit_application():
-            self.gui.update(self.gui_menu())
+            if self.__update_gui:
+                self.gui.update(self.gui_menu())
+                self.__update_gui = False
             time.sleep(self.time_step)
 
 
