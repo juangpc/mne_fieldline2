@@ -17,7 +17,7 @@ if __name__ == '__main__':
     config = lib.ini_file_parser.parse_file('fieldline2ft.ini')
     log.debug(config)
 
-    lib.menus.global_exit(app.exit)
+    lib.menus.global_app(app)
     if lib.fieldline.fieldline_correctly_installed():
         app.set_gui_menu(lib.menus.InitialMenu())
     else:
