@@ -3,7 +3,7 @@ import lib.log
 import lib.application
 import lib.ini_file_parser
 import lib.menus
-import lib.globals
+import lib.globals as globals
 
 import logging
 
@@ -14,12 +14,11 @@ if __name__ == '__main__':
     log.info("Creating main app.")
     app = lib.application.App()
 
-
     log.info("Parsing input file.")
     config = lib.ini_file_parser.parse_file('fieldline2ft.ini')
     log.debug(config)
 
-    lib.globals.set_global_app(app)
+    globals.set_global_app(app)
     if lib.fieldline.fieldline_correctly_installed():
         app.set_gui_menu(lib.menus.InitialMenu())
     else:
