@@ -17,7 +17,7 @@ class FieldLineDevice:
         self.measuring_data_lock = threading.Lock()
 
         self.data_callback_lock = threading.Lock()
-        self.data_callback = print
+        self.__data_callback = print
 
     def __del__(self):
         self.stop()
@@ -122,6 +122,11 @@ class FieldLineDevice:
             self.measuring_data_lock.release()
         return self.measuring_data()
 
+    def set_data_callback(self, callback):
+        self.data_callback_lock.acquire()
+        self.__data_callback = callback
+        self.data_callback_lock.release()
+
     def __wait_for_restart_to_finish(self):
         while (self.num_restarted_sensors() < self.num_working_sensors()):
             time.sleep(self.__time_sleep_minor_secs)
@@ -174,17 +179,12 @@ class FieldLineDevice:
                 channel_key_list.append(key)
         return channel_key_list
 
-    def set_data_callback(self, callback):
-        self.data_callback_lock.acquire()
-        self.data_callback = callback
-        self.data_callback_lock.release()
-
     def __parse_data(self, data):
         chunk = numpy.zeros(len(data), self.num_working_sensors(), dtype=numpy.single)
         for sample_i in range(len(data)):
             for ch_i, channel in enumerate(self.channel_key_list):
                 chunk[sample_i, ch_i] = data[0][channel]["data"] * data[0][channel]["calibration"]
-        self.data_callback(chunk)
+        self.__data_callback(chunk)
 
 
 def fieldline_correctly_installed():
