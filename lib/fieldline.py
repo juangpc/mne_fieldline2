@@ -13,7 +13,7 @@ class FieldLineDevice:
         self.__time_sleep_minor_secs = .4
         self.__time_out_secs = 20
         self.__init_configuration(conf)
-        self.measuring_data = False
+        self.__measuring_data = False
         self.measuring_data_lock = threading.Lock()
 
         self.data_callback_lock = threading.Lock()
@@ -114,11 +114,11 @@ class FieldLineDevice:
     def measuring_data(self, *argv):
         if len(argv) == 0:
             self.measuring_data_lock.acquire()
-            out_value = self.measuring_data
+            out_value = self.__measuring_data
             self.measuring_data_lock.release()
         else:
             self.measuring_data_lock.acquire()
-            self.measuring_data = argv[0]
+            self.__measuring_data = argv[0]
             self.measuring_data_lock.release()
         return self.measuring_data()
 
